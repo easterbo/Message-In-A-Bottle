@@ -18,7 +18,7 @@
 
 ## Project Description
 
-Simple font distribution site that allows users to browse and download from a curated library of fonts. It features a clean and easy-to-navigate interface tailored for creatives (graphic designers, developers, filmmakers, etc.). The main feature is its search system, which offers more control and freedom than existing font sites, supporting both basic filtering and subjective search queries (e.g., "Sci-fi logo text," "Coming of age title card").
+Spotify add-on application that allows users to browse and select a number of songs from the spotify library. The functionality of the app is such that upon two users with the application encountering, the devices with the app installed 'trade' a song from each of their selections, storing up to a maximum of five throughout a day. Once the app is opened post 'trade', the user is able to listen to whichever songs they have recieved. Each user's profile contains statistics and a taste map, allowing them to be viewed and searched. This app is aimed towards those with an interest in music, or who would enjoy diversifying their music taste.
 
 ---
 
