@@ -1,6 +1,8 @@
 const express = require('express');
 const axios = require('axios');
 const qs = require('qs');
+const { getValidAccessToken } = require('../utils/spotify_utils');
+const { getUserTokens } = require('../utils/auth');
 require('dotenv').config();
 
 const router = express.Router();
@@ -11,8 +13,7 @@ const {
   SPOTIFY_REDIRECT_URI
 } = process.env;
 
-// -------------- Login & Authorisation --------------
-
+// -------------- Login ---------------------------------------------------------------------------------------------
 // Takes users to the Spotify Login and Authorisation Screen, then redirects to SPOTIFY_REDIRECT_URI (/callback)
 router.get('/login', (req, res) => {
   const scope = 'user-library-read';
@@ -37,16 +38,21 @@ router.get('/callback', async (req, res) => {
 
     const { access_token, refresh_token } = response.data;
 
-    // TODO: Store token for future use.
-    res.json({ access_token, refresh_token });
+    // TODO: Store above values in DB alongside a userID.
+    // Access tokens expire quickly, Refresh do not.
+    // We need to store the encrypted refresh tokens in a database.
+    // We can use these to generate a new access token.
+    // This stops the user from having to log in every time.
 
-  } catch (err) {
-    res.status(400).json({ error: 'Token exchange failed' });
-  }
+    res.json({ access_token, refresh_token });
+  } 
+  catch (err) { res.status(400).json({ error: 'Token exchange failed' }); }
 });
 
-// -------------- Functionality --------------
 
+
+// -------------- Functionality ------------------------------------------------------------------------------------
+// Attempts to access a user's library.
 router.get('/library', async (req, res) => {
   const token = req.headers.authorization;
   try {
@@ -54,12 +60,11 @@ router.get('/library', async (req, res) => {
       headers: { Authorization: `Bearer ${token}` }
     });
     res.json(response.data);
-  } catch (err) {
-    res.status(401).json({ error: 'Unauthorized' });
   }
+  catch (err) { res.status(401).json({ error: 'Unauthorized' }); }
 });
 
-// Step 4: Search
+// Attempts to search a user's library.
 router.get('/search', async (req, res) => {
   const token = req.headers.authorization;
   const query = req.query.q;
@@ -69,9 +74,8 @@ router.get('/search', async (req, res) => {
       params: { q: query, type: 'track,artist,album', limit: 10 }
     });
     res.json(response.data);
-  } catch (err) {
-    res.status(400).json({ error: 'Search failed' });
   }
+  catch (err) { res.status(400).json({ error: 'Search failed' }); }
 });
 
 module.exports = router;
