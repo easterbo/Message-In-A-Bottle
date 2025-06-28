@@ -1,0 +1,8 @@
+Currently can:
+
+Run backend: npm start
+Run frontend: npx expo start --clear
+
+Current issue:
+Upon signing in, get this error - INVALID_CLIENT: Invalid redirect URI.
+This is because my redirect URI takes us to our localhost which is breaking things.
