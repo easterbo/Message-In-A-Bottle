@@ -8,19 +8,22 @@ const discovery = {
 };
 
 const SPOTIFY_CLIENT_ID = 'e1036862aaee48f6808fad6752a055b7'
-const AUTH_REDIRECT_URI = AuthSession.makeRedirectUri({ native: 'shelfshare://auth-callback' });
+// THIS IS DEPRECATED!!!! - This is why it isnt working.
+// https://github.com/expo/fyi/blob/main/auth-proxy-migration.md
+const redirectUri = AuthSession.makeRedirectUri({ useProxy: true });
+console.log(redirectUri)
 
 export function useSpotifyAuth() {
   // EXPO built-in PKCE Authorisation function - creates and hashes code.
   const [request, response, promptAsync] = AuthSession.useAuthRequest(
-  {
-    clientId: SPOTIFY_CLIENT_ID,
-    scopes: ['user-read-private', 'user-read-email'],
-    redirectUri: AUTH_REDIRECT_URI,
-    usePKCE: true,
-  },
-  discovery
-);
+    {
+      clientId: SPOTIFY_CLIENT_ID,
+      scopes: ['user-read-private', 'user-read-email'],
+      redirectUri,
+      usePKCE: true,
+    },
+    discovery
+  );
 
   // If authorisation was a success...
   useEffect(() => {
@@ -30,13 +33,13 @@ export function useSpotifyAuth() {
       // Send code and code_verifier to backend for token exchange.
       const exchangeCodeForToken = async () => {
         const code_verifier = await SecureStore.getItemAsync('expo-auth-session-code-verifier');
-        const res = await fetch('http://localhost:3001/spotify/callback', {
+        const res = await fetch('http://127.0.0.1:3001/spotify/callback', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
+          body: JSON.stringify({
             code,
             code_verifier,
-            redirect_uri: AUTH_REDIRECT_URI,
+            redirect_uri: redirectUri,
           }),
         });
 

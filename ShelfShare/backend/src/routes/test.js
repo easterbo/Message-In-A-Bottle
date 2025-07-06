@@ -2,6 +2,10 @@ const express = require('express');
 const db = require('../db');
 const router = express.Router();
 
+router.get('/', (req, res) => {
+  res.json({ message: 'Backend is alive' });
+});
+
 // WORKING!!!!!
 router.get('/test-db', async (req, res) => {
   try {

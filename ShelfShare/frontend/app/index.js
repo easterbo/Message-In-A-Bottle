@@ -1,8 +1,7 @@
 
 import React from 'react';
 import { View, Button, StyleSheet, Text } from 'react-native';
-import { useSpotifyAuth } from '../hooks/useSpotifyAuth'; // adjust path if needed
-
+import { useSpotifyAuth } from '../hooks/useSpotifyAuth';
 export default function Home() {
   const { promptAsync } = useSpotifyAuth();
 
